@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ใบวางบิล</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1b4f3a;
+    --primary2: #2a7a58;
+    --accent: #d4a017;
+    --light: #f4f8f5;
+    --border: #c2d6ca;
+    --text: #1a2a22;
+    --muted: #6a8878;
+    --danger: #c0392b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: #e6eeea;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.25);
+  }
+  .topbar-title { color: #fff; font-weight: 700; font-size: 16px; }
+  .topbar-title span { color: var(--accent); }
+  .btn-pdf {
+    background: var(--accent); color: #fff; border: none;
+    padding: 8px 18px; border-radius: 8px;
+    font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: background .2s;
+  }
+  .btn-pdf:hover { background: #b8880e; }
+
+  .wrapper { max-width: 760px; margin: 0 auto; padding: 72px 12px 40px; }
+
+  .card {
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(27,79,58,.10);
+    overflow: hidden; margin-bottom: 14px;
+  }
+  .card-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+    padding: 13px 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-header-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center; color: var(--accent);
+  }
+  .card-header h2 { color: #fff; font-size: 14px; font-weight: 700; }
+  .card-body { padding: 16px 18px; }
+
+  /* DOC HEADER */
+  .doc-header {
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(27,79,58,.10);
+    overflow: hidden; margin-bottom: 14px;
+  }
+  .doc-top {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+    padding: 20px 18px 16px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  }
+  .company-name-input {
+    font-size: 20px; font-weight: 800; color: #fff;
+    background: rgba(255,255,255,.12); border: 1.5px dashed rgba(255,255,255,.4);
+    border-radius: 8px; padding: 6px 10px; width: 100%;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .company-name-input::placeholder { color: rgba(255,255,255,.45); }
+  .company-sub-input {
+    font-size: 12px; color: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.08); border: 1px dashed rgba(255,255,255,.3);
+    border-radius: 6px; padding: 4px 8px; width: 100%; margin-top: 6px;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .doc-badge {
+    background: var(--accent); border-radius: 10px;
+    padding: 8px 14px; text-align: center; min-width: 130px; flex-shrink: 0;
+  }
+  .doc-badge .badge-title { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: .5px; }
+  .doc-badge .badge-sub { font-size: 10px; color: rgba(255,255,255,.8); margin-top: 2px; }
+  .doc-badge .doc-no-input {
+    font-size: 13px; font-weight: 700; color: #fff; text-align: center;
+    background: rgba(255,255,255,.2); border: 1px dashed rgba(255,255,255,.5);
+    border-radius: 5px; padding: 3px 6px; width: 100%; margin-top: 4px;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .doc-meta { padding: 12px 18px; background: var(--light); border-bottom: 1px solid var(--border); }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .field { margin-bottom: 11px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: 9px 12px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text);
+    background: #fff; transition: border .2s, box-shadow .2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(27,79,58,.1);
+  }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:480px){ .grid2 { grid-template-columns: 1fr; gap: 8px; } }
+
+  /* TABLE */
+  .tbl-head {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px 120px 120px 36px;
+    gap: 5px; padding: 9px 8px;
+    background: var(--primary); border-radius: 8px 8px 0 0;
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,.9);
+    text-align: center;
+  }
+  .tbl-head span:nth-child(2) { text-align: left; }
+
+  .tbl-wrapper { border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .tbl-body { min-height: 40px; }
+
+  .item-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px 120px 120px 36px;
+    gap: 5px; padding: 6px 8px;
+    background: #fff; border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-row:nth-child(even) { background: #f6faf7; }
+
+  .row-num {
+    text-align: center; font-size: 12px; color: var(--muted); font-weight: 700;
+    background: var(--light); border-radius: 6px; padding: 5px 0;
+  }
+  .ii {
+    border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 6px 8px; font-family: 'Sarabun', sans-serif;
+    font-size: 13px; color: var(--text); width: 100%; background: #fff;
+    transition: border .2s;
+  }
+  .ii:focus { outline: none; border-color: var(--primary); }
+  .ii.right { text-align: right; }
+  .row-total {
+    text-align: right; font-size: 13px; font-weight: 700;
+    color: var(--primary); padding-right: 4px;
+  }
+  .btn-del {
+    background: none; border: none; cursor: pointer;
+    color: #bbb; transition: color .2s;
+    display: flex; align-items: center; justify-content: center; padding: 4px;
+  }
+  .btn-del:hover { color: var(--danger); }
+
+  .btn-add-row {
+    display: flex; align-items: center; gap: 8px;
+    background: none; border: 1.5px dashed var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--muted);
+    cursor: pointer; width: 100%; margin-top: 10px; transition: all .2s;
+  }
+  .btn-add-row:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* SUMMARY */
+  .summary-box {
+    background: var(--light); border-radius: 10px;
+    border: 1.5px solid var(--border); padding: 14px 18px; margin-top: 14px;
+  }
+  .sum-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; font-size: 14px; border-bottom: 1px dashed var(--border);
+  }
+  .sum-row:last-child { border-bottom: none; }
+  .sum-row.grand {
+    border-top: 2.5px solid var(--primary); margin-top: 8px; padding-top: 10px;
+    font-size: 18px; font-weight: 800; color: var(--primary); border-bottom: none;
+  }
+  .sum-label { color: var(--muted); font-size: 13px; }
+  .sum-val { font-weight: 700; }
+
+  /* SIGNATURE */
+  .sig-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:480px){ .sig-area { grid-template-columns: 1fr; } }
+  .sig-box {
+    border: 1.5px dashed var(--border); border-radius: 10px;
+    padding: 14px 14px 10px; text-align: center;
+  }
+  .sig-label { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+  .sig-line { border-top: 1.5px solid var(--border); margin: 28px 0 8px; }
+  .sig-name-input {
+    border: none; border-bottom: 1.5px dashed var(--border);
+    font-family: 'Sarabun', sans-serif; font-size: 13px; text-align: center;
+    width: 100%; background: transparent; color: var(--text); padding: 2px 0;
+  }
+  .sig-name-input:focus { outline: none; border-bottom-color: var(--primary); }
+  .sig-date-label { font-size: 11px; color: var(--muted); margin-top: 6px; }
+  .sig-date-input {
+    border: none; border-bottom: 1.5px dashed var(--border);
+    font-family: 'Sarabun', sans-serif; font-size: 13px; text-align: center;
+    width: 100%; background: transparent; color: var(--text); padding: 2px 0; margin-top: 2px;
+  }
+  .sig-date-input:focus { outline: none; border-bottom-color: var(--primary); }
+
+  .mobile-hint {
+    font-size: 11px; color: var(--muted); text-align: center;
+    margin-bottom: 8px; display: none;
+  }
+  @media(max-width:540px){ .mobile-hint { display: block; } }
+
+  /* ── FOOTER SECTION (หมายเหตุซ้าย + ลายเซ็นขวา) ── */
+  .footer-top-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; border-radius: 14px 14px 0 0; overflow: hidden;
+    border: 1.5px solid var(--border); border-bottom: none;
+    box-shadow: 0 4px 20px rgba(27,79,58,.10);
+  }
+  .footer-top-left {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+    padding: 11px 16px; display: flex; align-items: center; gap: 8px;
+    border-right: 1px solid rgba(255,255,255,.15);
+  }
+  .footer-top-left-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center; color: var(--accent);
+    flex-shrink: 0;
+  }
+  .footer-top-left h3 { color: #fff; font-size: 13px; font-weight: 700; }
+  .footer-top-right {
+    background: #fff; padding: 11px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-left: 1px solid var(--border);
+  }
+  .footer-top-right-label { font-size: 14px; font-weight: 700; color: var(--primary); }
+  .footer-top-right-amount { font-size: 20px; font-weight: 800; color: var(--accent); }
+
+  .footer-bottom-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; border-radius: 0 0 14px 14px; overflow: hidden;
+    border: 1.5px solid var(--border); border-top: none;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(27,79,58,.10);
+  }
+  @media(max-width:540px) {
+    .footer-top-row, .footer-bottom-row { grid-template-columns: 1fr; }
+  }
+  .footer-bottom-left {
+    padding: 14px 16px; border-right: 1px solid var(--border); background: #fff;
+  }
+  .footer-bottom-right { padding: 14px 16px; background: #fff; }
+
+  /* sig inline */
+  .sig-inline {
+    border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px;
+  }
+  .sig-inline-title {
+    font-size: 10px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .5px;
+    text-align: center; margin-bottom: 8px;
+  }
+  .sig-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .sig-col { text-align: center; }
+  .sig-col-label { font-size: 10px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+  .sig-space { height: 30px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .sig-name-n {
+    border: none; border-bottom: 1.5px dashed var(--border);
+    font-family: 'Sarabun', sans-serif; font-size: 12px; text-align: center;
+    width: 100%; background: transparent; color: var(--text); padding: 2px 0;
+  }
+  .sig-name-n:focus { outline: none; border-bottom-color: var(--primary); }
+  .sig-date-lbl { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  .sig-date-pk {
+    border: none; border-bottom: 1px dashed var(--border);
+    font-family: 'Sarabun', sans-serif; font-size: 11px; text-align: center;
+    width: 100%; background: transparent; color: var(--text); padding: 1px 0; margin-top: 2px;
+    -webkit-appearance: none;
+  }
+  .sig-date-pk::-webkit-calendar-picker-indicator { opacity: .5; cursor: pointer; }
+  .sig-date-pk:focus { outline: none; border-bottom-color: var(--primary); }
+  .sig-date-disp {
+    font-size: 11px; color: var(--primary); font-weight: 600;
+    text-align: center; margin-top: 2px; min-height: 16px;
+  }
+
+  @media print {
+    @page { size: A4; margin: 10mm 10mm 10mm 10mm; }
+    body { background: #fff; font-size: 12px; }
+    .topbar, .btn-add-row, .btn-del, .no-print { display: none !important; }
+    .wrapper { padding: 0; max-width: 100%; }
+    .card, .doc-header { box-shadow: none; margin-bottom: 8px; page-break-inside: avoid; }
+    .ii, .company-name-input, .company-sub-input, .doc-no-input,
+    .field input, .field textarea, .field select,
+    .sig-name-input, .sig-date-input, .sig-name-n {
+      border: none !important; box-shadow: none !important; background: transparent !important;
+      padding: 2px 4px !important;
+    }
+    .field input, .field textarea, .field select { border-bottom: 1px solid #ccc !important; }
+    .sig-date-pk { display: none !important; }
+    .sig-date-disp { display: block !important; }
+    .tbl-head, .doc-top, .card-header, .footer-top-left {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .footer-top-row, .footer-bottom-row { page-break-inside: avoid; break-inside: avoid; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">🧾 ใบ<span>วางบิล</span></div>
+  <button class="btn-pdf" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    บันทึก PDF
+  </button>
+</div>
+
+<div class="wrapper">
+
+  <!-- DOC HEADER -->
+  <div class="doc-header">
+    <div class="doc-top">
+      <div style="flex:1">
+        <input class="company-name-input" type="text" placeholder="ชื่อบริษัท / ผู้รับเหมา">
+        <input class="company-sub-input" type="text" placeholder="ที่อยู่ / เบอร์โทร / อีเมล">
+      </div>
+      <div class="doc-badge">
+        <div class="badge-title">ใบวางบิล</div>
+        <div class="badge-sub">เลขที่เอกสาร</div>
+        <input class="doc-no-input" type="text" placeholder="IV-0001">
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT INFO -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h2>ข้อมูลโครงการ</h2>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>ชื่อโครงการ / งาน</label>
+        <input type="text" placeholder="กรอกชื่อโครงการหรืองาน">
+      </div>
+      <div class="field">
+        <label>ผู้ว่าจ้าง / เจ้าของโครงการ</label>
+        <input type="text" placeholder="ชื่อผู้ว่าจ้าง / บริษัท">
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEMS TABLE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <h2>รายการวางบิลตามงวด</h2>
+    </div>
+    <div class="card-body" style="padding-top:12px">
+      <p class="mobile-hint">← เลื่อนซ้าย-ขวาเพื่อดูตาราง →</p>
+      <div class="tbl-wrapper">
+        <div class="tbl-head">
+          <span>งวดที่</span>
+          <span>รายละเอียดงวด</span>
+          <span>เปอร์เซ็นต์</span>
+          <span>จำนวนเงิน</span>
+          <span>ราคารวม (฿)</span>
+          <span></span>
+        </div>
+        <div class="tbl-body" id="tbl-body"></div>
+      </div>
+
+      <button class="btn-add-row no-print" onclick="addRow()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        เพิ่มงวด
+      </button>
+
+      <div class="summary-box">
+        <div class="sum-row">
+          <span class="sum-label">รวมจำนวนเงินทั้งหมด</span>
+          <span class="sum-val" id="total-amt">0.00 ฿</span>
+        </div>
+        <div class="sum-row grand">
+          <span>ยอดรวมทั้งสิ้น</span>
+          <span id="grand-total">0.00 ฿</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER: หมายเหตุ(ซ้าย) + ยอดรวม+ลายเซ็น(ขวา) -->
+
+  <!-- แถวบน: header หมายเหตุ (ซ้าย) | ยอดรวม (ขวา) -->
+  <div class="footer-top-row">
+    <div class="footer-top-left">
+      <div class="footer-top-left-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <h3>หมายเหตุ</h3>
+    </div>
+    <div class="footer-top-right">
+      <span class="footer-top-right-label">ยอดรวมทั้งสิ้น</span>
+      <span class="footer-top-right-amount" id="grand-total-footer">0.00 ฿</span>
+    </div>
+  </div>
+
+  <!-- แถวล่าง: ช่องหมายเหตุ (ซ้าย) | ลายเซ็น (ขวา) -->
+  <div class="footer-bottom-row">
+    <div class="footer-bottom-left">
+      <div class="field" style="margin-bottom:10px">
+        <label>ชำระโดยวิธี / บัญชีธนาคาร</label>
+        <input type="text" placeholder="เช่น โอนเงิน กสิกรไทย 123-4-56789-0">
+      </div>
+      <div class="field" style="margin-bottom:10px">
+        <label>เงื่อนไขการชำระเงิน</label>
+        <input type="text" placeholder="เช่น ชำระภายใน 30 วัน">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>หมายเหตุเพิ่มเติม</label>
+        <input type="text" placeholder="รายละเอียดเพิ่มเติม / ข้อสังเกต">
+      </div>
+    </div>
+    <div class="footer-bottom-right">
+      <div class="sig-inline">
+        <div class="sig-inline-title">ลายเซ็นผู้เกี่ยวข้อง</div>
+        <div class="sig-cols">
+          <div class="sig-col">
+            <div class="sig-col-label">ผู้วางบิล</div>
+            <div class="sig-space"></div>
+            <input class="sig-name-n" type="text" placeholder="ชื่อ - นามสกุล">
+            <div class="sig-date-lbl">วันที่</div>
+            <input type="date" class="sig-date-pk" id="sigBillerDate"
+              onchange="updateSigDate('sigBillerDate','sigBillerDisp')">
+            <div class="sig-date-disp" id="sigBillerDisp"></div>
+          </div>
+          <div class="sig-col">
+            <div class="sig-col-label">ผู้อนุมัติ</div>
+            <div class="sig-space"></div>
+            <input class="sig-name-n" type="text" placeholder="ชื่อ - นามสกุล">
+            <div class="sig-date-lbl">วันที่</div>
+            <input type="date" class="sig-date-pk" id="sigApproverDate"
+              onchange="updateSigDate('sigApproverDate','sigApproverDisp')">
+            <div class="sig-date-disp" id="sigApproverDisp"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:6px 0 4px;font-size:11px;color:var(--muted)" class="no-print">
+    กด <strong>บันทึก PDF</strong> ด้านบน เพื่อบันทึกหรือพิมพ์เอกสาร
+  </div>
+</div>
+
+<script>
+  let rowId = 0;
+
+  const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
+                      'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+  function fmtThaiDate(val) {
+    if (!val) return '';
+    const [y, m, d] = val.split('-');
+    return `${parseInt(d)} ${thaiMonths[parseInt(m)-1]} ${parseInt(y)+543}`;
+  }
+
+  function updateSigDate(inputId, dispId) {
+    const val = document.getElementById(inputId)?.value || '';
+    const el  = document.getElementById(dispId);
+    if (el) el.textContent = fmtThaiDate(val);
+  }
+
+  function fmt(n) {
+    return Number(n).toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ฿';
+  }
+
+  function addRow(desc='', pct='', amt='') {
+    rowId++;
+    const id = rowId;
+    const body = document.getElementById('tbl-body');
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.id = 'row-' + id;
+    row.innerHTML = `
+      <div class="row-num">${id}</div>
+      <input class="ii" type="text" placeholder="รายละเอียดงวดที่ ${id}" value="${desc}">
+      <input class="ii right pct-input" type="text" placeholder="-" value="${pct}" oninput="calcAll()">
+      <input class="ii right amt-input" type="number" min="0" step="0.01" placeholder="0.00" value="${amt}" oninput="updateRowTotal(${id}); calcAll()">
+      <div class="row-total" id="rt-${id}">0.00 ฿</div>
+      <button class="btn-del no-print" onclick="delRow(${id})" title="ลบงวดนี้">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
+    `;
+    body.appendChild(row);
+    updateRowTotal(id);
+    calcAll();
+  }
+
+  function updateRowTotal(id) {
+    const row = document.getElementById('row-' + id);
+    const amt = parseFloat(row.querySelector('.amt-input').value) || 0;
+    document.getElementById('rt-' + id).textContent = fmt(amt);
+  }
+
+  function delRow(id) {
+    const el = document.getElementById('row-' + id);
+    if(el) el.remove();
+    calcAll();
+  }
+
+  function calcAll() {
+    let totalAmt = 0;
+    document.querySelectorAll('.item-row').forEach(row => {
+      totalAmt += parseFloat(row.querySelector('.amt-input').value) || 0;
+    });
+    document.getElementById('total-amt').textContent = fmt(totalAmt);
+    document.getElementById('grand-total').textContent = fmt(totalAmt);
+    document.getElementById('grand-total-footer').textContent = fmt(totalAmt);
+  }
+
+  // Default dates
+  const today = new Date();
+  const toStr = d => d.toISOString().split('T')[0];
+  const due = new Date(today); due.setDate(due.getDate() + 30);
+  document.getElementById('issue-date').value = toStr(today);
+  document.getElementById('due-date').value = toStr(due);
+
+  // Initial rows
+  addRow('', '', '');
+  addRow('', '', '');
+  addRow('', '', '');
+</script>
+</body>
+</html>
