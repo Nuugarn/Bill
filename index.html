@@ -35,16 +35,39 @@
     padding: 12px 16px;
     box-shadow: 0 2px 12px rgba(0,0,0,.25);
   }
-  .topbar-title { color: #fff; font-weight: 700; font-size: 16px; }
+  .topbar-title { color: #fff; font-weight: 700; font-size: 16px; white-space: nowrap; }
   .topbar-title span { color: var(--accent); }
+  .topbar-actions { display: flex; align-items: center; gap: 8px; }
+  .lang-switch {
+    display: flex; padding: 3px; gap: 2px;
+    border: 1px solid rgba(255,255,255,.35); border-radius: 8px;
+    background: rgba(255,255,255,.1);
+  }
+  .lang-btn {
+    min-width: 34px; padding: 5px 8px; border: none; border-radius: 5px;
+    background: transparent; color: rgba(255,255,255,.75);
+    font-family: 'Sarabun', sans-serif; font-size: 12px; font-weight: 700;
+    cursor: pointer;
+  }
+  .lang-btn.active { background: #fff; color: var(--primary); }
   .btn-pdf {
     background: var(--accent); color: #fff; border: none;
     padding: 8px 18px; border-radius: 8px;
     font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
-    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap;
     transition: background .2s;
   }
   .btn-pdf:hover { background: #b8880e; }
+
+  @media(max-width:480px) {
+    .topbar { padding: 10px 12px; }
+    .topbar-title { font-size: 12px; }
+    .topbar-actions { gap: 6px; }
+    .lang-btn { min-width: 28px; padding: 5px; }
+    .btn-pdf { padding: 7px 9px; font-size: 12px; gap: 4px; }
+    .doc-top { flex-direction: column; }
+    .doc-badge { width: 100%; }
+  }
 
   .wrapper { max-width: 760px; margin: 0 auto; padding: 72px 12px 40px; }
 
@@ -138,6 +161,11 @@
 
   .tbl-wrapper { border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
   .tbl-body { min-height: 40px; }
+
+  @media(max-width:540px) {
+    .tbl-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tbl-head, .item-row { min-width: 620px; }
+  }
 
   .item-row {
     display: grid;
@@ -327,11 +355,17 @@
 <body>
 
 <div class="topbar">
-  <div class="topbar-title">🧾 ใบ<span>วางบิล</span></div>
-  <button class="btn-pdf" onclick="window.print()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    บันทึก PDF
-  </button>
+  <div class="topbar-title" data-i18n-html="appTitle">🧾 ใบ<span>วางบิล</span></div>
+  <div class="topbar-actions">
+    <div class="lang-switch" role="group" aria-label="เลือกภาษา" data-i18n-aria-label="languageSelector">
+      <button class="lang-btn active" type="button" data-lang="th" onclick="setLanguage('th')">TH</button>
+      <button class="lang-btn" type="button" data-lang="en" onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="btn-pdf" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span data-i18n="savePdf">บันทึก PDF</span>
+    </button>
+  </div>
 </div>
 
 <div class="wrapper">
@@ -340,12 +374,12 @@
   <div class="doc-header">
     <div class="doc-top">
       <div style="flex:1">
-        <input class="company-name-input" type="text" placeholder="ชื่อบริษัท / ผู้รับเหมา">
-        <input class="company-sub-input" type="text" placeholder="ที่อยู่ / เบอร์โทร / อีเมล">
+        <input class="company-name-input" type="text" placeholder="ชื่อบริษัท / ผู้รับเหมา" data-i18n-placeholder="companyNamePlaceholder">
+        <input class="company-sub-input" type="text" placeholder="ที่อยู่ / เบอร์โทร / อีเมล" data-i18n-placeholder="companyContactPlaceholder">
       </div>
       <div class="doc-badge">
-        <div class="badge-title">ใบวางบิล</div>
-        <div class="badge-sub">เลขที่เอกสาร</div>
+        <div class="badge-title" data-i18n="documentTitle">ใบวางบิล</div>
+        <div class="badge-sub" data-i18n="documentNumber">เลขที่เอกสาร</div>
         <input class="doc-no-input" type="text" placeholder="IV-0001">
       </div>
     </div>
@@ -357,16 +391,16 @@
       <div class="card-header-icon">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       </div>
-      <h2>ข้อมูลโครงการ</h2>
+      <h2 data-i18n="projectInfo">ข้อมูลโครงการ</h2>
     </div>
     <div class="card-body">
       <div class="field">
-        <label>ชื่อโครงการ / งาน</label>
-        <input type="text" placeholder="กรอกชื่อโครงการหรืองาน">
+        <label data-i18n="projectName">ชื่อโครงการ / งาน</label>
+        <input type="text" placeholder="กรอกชื่อโครงการหรืองาน" data-i18n-placeholder="projectNamePlaceholder">
       </div>
       <div class="field">
-        <label>ผู้ว่าจ้าง / เจ้าของโครงการ</label>
-        <input type="text" placeholder="ชื่อผู้ว่าจ้าง / บริษัท">
+        <label data-i18n="client">ผู้ว่าจ้าง / เจ้าของโครงการ</label>
+        <input type="text" placeholder="ชื่อผู้ว่าจ้าง / บริษัท" data-i18n-placeholder="clientPlaceholder">
       </div>
     </div>
   </div>
@@ -377,17 +411,17 @@
       <div class="card-header-icon">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
       </div>
-      <h2>รายการวางบิลตามงวด</h2>
+      <h2 data-i18n="billingItems">รายการวางบิลตามงวด</h2>
     </div>
     <div class="card-body" style="padding-top:12px">
-      <p class="mobile-hint">← เลื่อนซ้าย-ขวาเพื่อดูตาราง →</p>
+      <p class="mobile-hint" data-i18n="scrollHint">← เลื่อนซ้าย-ขวาเพื่อดูตาราง →</p>
       <div class="tbl-wrapper">
         <div class="tbl-head">
-          <span>งวดที่</span>
-          <span>รายละเอียดงวด</span>
-          <span>เปอร์เซ็นต์</span>
-          <span>จำนวนเงิน</span>
-          <span>ราคารวม (฿)</span>
+          <span data-i18n="installment">งวดที่</span>
+          <span data-i18n="description">รายละเอียดงวด</span>
+          <span data-i18n="percentage">เปอร์เซ็นต์</span>
+          <span data-i18n="amount">จำนวนเงิน</span>
+          <span data-i18n="totalThb">ราคารวม (฿)</span>
           <span></span>
         </div>
         <div class="tbl-body" id="tbl-body"></div>
@@ -395,16 +429,16 @@
 
       <button class="btn-add-row no-print" onclick="addRow()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        เพิ่มงวด
+        <span data-i18n="addInstallment">เพิ่มงวด</span>
       </button>
 
       <div class="summary-box">
         <div class="sum-row">
-          <span class="sum-label">รวมจำนวนเงินทั้งหมด</span>
+          <span class="sum-label" data-i18n="subtotal">รวมจำนวนเงินทั้งหมด</span>
           <span class="sum-val" id="total-amt">0.00 ฿</span>
         </div>
         <div class="sum-row grand">
-          <span>ยอดรวมทั้งสิ้น</span>
+          <span data-i18n="grandTotal">ยอดรวมทั้งสิ้น</span>
           <span id="grand-total">0.00 ฿</span>
         </div>
       </div>
@@ -419,10 +453,10 @@
       <div class="footer-top-left-icon">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       </div>
-      <h3>หมายเหตุ</h3>
+      <h3 data-i18n="notes">หมายเหตุ</h3>
     </div>
     <div class="footer-top-right">
-      <span class="footer-top-right-label">ยอดรวมทั้งสิ้น</span>
+      <span class="footer-top-right-label" data-i18n="grandTotal">ยอดรวมทั้งสิ้น</span>
       <span class="footer-top-right-amount" id="grand-total-footer">0.00 ฿</span>
     </div>
   </div>
@@ -431,36 +465,36 @@
   <div class="footer-bottom-row">
     <div class="footer-bottom-left">
       <div class="field" style="margin-bottom:10px">
-        <label>ชำระโดยวิธี / บัญชีธนาคาร</label>
-        <input type="text" placeholder="เช่น โอนเงิน กสิกรไทย 123-4-56789-0">
+        <label data-i18n="paymentMethod">ชำระโดยวิธี / บัญชีธนาคาร</label>
+        <input type="text" placeholder="เช่น โอนเงิน กสิกรไทย 123-4-56789-0" data-i18n-placeholder="paymentMethodPlaceholder">
       </div>
       <div class="field" style="margin-bottom:10px">
-        <label>เงื่อนไขการชำระเงิน</label>
-        <input type="text" placeholder="เช่น ชำระภายใน 30 วัน">
+        <label data-i18n="paymentTerms">เงื่อนไขการชำระเงิน</label>
+        <input type="text" placeholder="เช่น ชำระภายใน 30 วัน" data-i18n-placeholder="paymentTermsPlaceholder">
       </div>
       <div class="field" style="margin-bottom:0">
-        <label>หมายเหตุเพิ่มเติม</label>
-        <input type="text" placeholder="รายละเอียดเพิ่มเติม / ข้อสังเกต">
+        <label data-i18n="additionalNotes">หมายเหตุเพิ่มเติม</label>
+        <input type="text" placeholder="รายละเอียดเพิ่มเติม / ข้อสังเกต" data-i18n-placeholder="additionalNotesPlaceholder">
       </div>
     </div>
     <div class="footer-bottom-right">
       <div class="sig-inline">
-        <div class="sig-inline-title">ลายเซ็นผู้เกี่ยวข้อง</div>
+        <div class="sig-inline-title" data-i18n="signatures">ลายเซ็นผู้เกี่ยวข้อง</div>
         <div class="sig-cols">
           <div class="sig-col">
-            <div class="sig-col-label">ผู้วางบิล</div>
+            <div class="sig-col-label" data-i18n="biller">ผู้วางบิล</div>
             <div class="sig-space"></div>
-            <input class="sig-name-n" type="text" placeholder="ชื่อ - นามสกุล">
-            <div class="sig-date-lbl">วันที่</div>
+            <input class="sig-name-n" type="text" placeholder="ชื่อ - นามสกุล" data-i18n-placeholder="fullName">
+            <div class="sig-date-lbl" data-i18n="date">วันที่</div>
             <input type="date" class="sig-date-pk" id="sigBillerDate"
               onchange="updateSigDate('sigBillerDate','sigBillerDisp')">
             <div class="sig-date-disp" id="sigBillerDisp"></div>
           </div>
           <div class="sig-col">
-            <div class="sig-col-label">ผู้อนุมัติ</div>
+            <div class="sig-col-label" data-i18n="approver">ผู้อนุมัติ</div>
             <div class="sig-space"></div>
-            <input class="sig-name-n" type="text" placeholder="ชื่อ - นามสกุล">
-            <div class="sig-date-lbl">วันที่</div>
+            <input class="sig-name-n" type="text" placeholder="ชื่อ - นามสกุล" data-i18n-placeholder="fullName">
+            <div class="sig-date-lbl" data-i18n="date">วันที่</div>
             <input type="date" class="sig-date-pk" id="sigApproverDate"
               onchange="updateSigDate('sigApproverDate','sigApproverDisp')">
             <div class="sig-date-disp" id="sigApproverDisp"></div>
@@ -471,30 +505,152 @@
   </div>
 
   <div style="text-align:center;padding:6px 0 4px;font-size:11px;color:var(--muted)" class="no-print">
-    กด <strong>บันทึก PDF</strong> ด้านบน เพื่อบันทึกหรือพิมพ์เอกสาร
+    <span data-i18n-html="printHint">กด <strong>บันทึก PDF</strong> ด้านบน เพื่อบันทึกหรือพิมพ์เอกสาร</span>
   </div>
 </div>
 
 <script>
   let rowId = 0;
+  let currentLang = 'th';
 
-  const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
-                      'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const translations = {
+    th: {
+      pageTitle: 'ใบวางบิล',
+      appTitle: '🧾 ใบ<span>วางบิล</span>',
+      languageSelector: 'เลือกภาษา',
+      savePdf: 'บันทึก PDF',
+      companyNamePlaceholder: 'ชื่อบริษัท / ผู้รับเหมา',
+      companyContactPlaceholder: 'ที่อยู่ / เบอร์โทร / อีเมล',
+      documentTitle: 'ใบวางบิล',
+      documentNumber: 'เลขที่เอกสาร',
+      projectInfo: 'ข้อมูลโครงการ',
+      projectName: 'ชื่อโครงการ / งาน',
+      projectNamePlaceholder: 'กรอกชื่อโครงการหรืองาน',
+      client: 'ผู้ว่าจ้าง / เจ้าของโครงการ',
+      clientPlaceholder: 'ชื่อผู้ว่าจ้าง / บริษัท',
+      billingItems: 'รายการวางบิลตามงวด',
+      scrollHint: '← เลื่อนซ้าย-ขวาเพื่อดูตาราง →',
+      installment: 'งวดที่',
+      description: 'รายละเอียดงวด',
+      percentage: 'เปอร์เซ็นต์',
+      amount: 'จำนวนเงิน',
+      totalThb: 'ราคารวม (฿)',
+      addInstallment: 'เพิ่มงวด',
+      subtotal: 'รวมจำนวนเงินทั้งหมด',
+      grandTotal: 'ยอดรวมทั้งสิ้น',
+      notes: 'หมายเหตุ',
+      paymentMethod: 'ชำระโดยวิธี / บัญชีธนาคาร',
+      paymentMethodPlaceholder: 'เช่น โอนเงิน กสิกรไทย 123-4-56789-0',
+      paymentTerms: 'เงื่อนไขการชำระเงิน',
+      paymentTermsPlaceholder: 'เช่น ชำระภายใน 30 วัน',
+      additionalNotes: 'หมายเหตุเพิ่มเติม',
+      additionalNotesPlaceholder: 'รายละเอียดเพิ่มเติม / ข้อสังเกต',
+      signatures: 'ลายเซ็นผู้เกี่ยวข้อง',
+      biller: 'ผู้วางบิล',
+      approver: 'ผู้อนุมัติ',
+      fullName: 'ชื่อ - นามสกุล',
+      date: 'วันที่',
+      printHint: 'กด <strong>บันทึก PDF</strong> ด้านบน เพื่อบันทึกหรือพิมพ์เอกสาร',
+      rowPlaceholder: id => `รายละเอียดงวดที่ ${id}`,
+      deleteRow: 'ลบงวดนี้'
+    },
+    en: {
+      pageTitle: 'Billing Statement',
+      appTitle: '🧾 Billing <span>Statement</span>',
+      languageSelector: 'Select language',
+      savePdf: 'Save PDF',
+      companyNamePlaceholder: 'Company / Contractor name',
+      companyContactPlaceholder: 'Address / Phone / Email',
+      documentTitle: 'BILLING STATEMENT',
+      documentNumber: 'Document No.',
+      projectInfo: 'Project Information',
+      projectName: 'Project / Job Name',
+      projectNamePlaceholder: 'Enter the project or job name',
+      client: 'Client / Project Owner',
+      clientPlaceholder: 'Client or company name',
+      billingItems: 'Progress Billing Items',
+      scrollHint: '← Swipe horizontally to view the table →',
+      installment: 'No.',
+      description: 'Description',
+      percentage: 'Percentage',
+      amount: 'Amount',
+      totalThb: 'Total (THB)',
+      addInstallment: 'Add Installment',
+      subtotal: 'Subtotal',
+      grandTotal: 'Grand Total',
+      notes: 'Notes',
+      paymentMethod: 'Payment Method / Bank Account',
+      paymentMethodPlaceholder: 'e.g. Bank transfer, account 123-4-56789-0',
+      paymentTerms: 'Payment Terms',
+      paymentTermsPlaceholder: 'e.g. Payment due within 30 days',
+      additionalNotes: 'Additional Notes',
+      additionalNotesPlaceholder: 'Additional details or remarks',
+      signatures: 'Authorised Signatures',
+      biller: 'Prepared By',
+      approver: 'Approved By',
+      fullName: 'Full name',
+      date: 'Date',
+      printHint: 'Select <strong>Save PDF</strong> above to save or print this document.',
+      rowPlaceholder: id => `Installment ${id} description`,
+      deleteRow: 'Delete this installment'
+    }
+  };
 
-  function fmtThaiDate(val) {
+  function formatDate(val) {
     if (!val) return '';
     const [y, m, d] = val.split('-');
-    return `${parseInt(d)} ${thaiMonths[parseInt(m)-1]} ${parseInt(y)+543}`;
+    const date = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+    return new Intl.DateTimeFormat(currentLang === 'th' ? 'th-TH' : 'en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'
+    }).format(date);
   }
 
   function updateSigDate(inputId, dispId) {
     const val = document.getElementById(inputId)?.value || '';
     const el  = document.getElementById(dispId);
-    if (el) el.textContent = fmtThaiDate(val);
+    if (el) el.textContent = formatDate(val);
   }
 
   function fmt(n) {
-    return Number(n).toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ฿';
+    const value = Number(n).toLocaleString(currentLang === 'th' ? 'th-TH' : 'en-US', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    });
+    return currentLang === 'th' ? `${value} ฿` : `THB ${value}`;
+  }
+
+  function setLanguage(lang) {
+    if (!translations[lang]) return;
+    currentLang = lang;
+    const t = translations[lang];
+
+    document.documentElement.lang = lang;
+    document.title = t.pageTitle;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t[el.dataset.i18n];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      el.innerHTML = t[el.dataset.i18nHtml];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t[el.dataset.i18nPlaceholder];
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+      el.setAttribute('aria-label', t[el.dataset.i18nAriaLabel]);
+    });
+    document.querySelectorAll('.lang-btn').forEach(button => {
+      const active = button.dataset.lang === lang;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    document.querySelectorAll('.item-row').forEach(row => {
+      const id = row.dataset.rowId;
+      row.querySelector('input[type="text"]').placeholder = t.rowPlaceholder(id);
+      row.querySelector('.btn-del').title = t.deleteRow;
+      updateRowTotal(id);
+    });
+    updateSigDate('sigBillerDate', 'sigBillerDisp');
+    updateSigDate('sigApproverDate', 'sigApproverDisp');
+    calcAll();
   }
 
   function addRow(desc='', pct='', amt='') {
@@ -504,13 +660,14 @@
     const row = document.createElement('div');
     row.className = 'item-row';
     row.id = 'row-' + id;
+    row.dataset.rowId = id;
     row.innerHTML = `
       <div class="row-num">${id}</div>
-      <input class="ii" type="text" placeholder="รายละเอียดงวดที่ ${id}" value="${desc}">
+      <input class="ii" type="text" placeholder="${translations[currentLang].rowPlaceholder(id)}" value="${desc}">
       <input class="ii right pct-input" type="text" placeholder="-" value="${pct}" oninput="calcAll()">
       <input class="ii right amt-input" type="number" min="0" step="0.01" placeholder="0.00" value="${amt}" oninput="updateRowTotal(${id}); calcAll()">
-      <div class="row-total" id="rt-${id}">0.00 ฿</div>
-      <button class="btn-del no-print" onclick="delRow(${id})" title="ลบงวดนี้">
+      <div class="row-total" id="rt-${id}">${fmt(0)}</div>
+      <button class="btn-del no-print" onclick="delRow(${id})" title="${translations[currentLang].deleteRow}">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
       </button>
     `;
@@ -545,13 +702,16 @@
   const today = new Date();
   const toStr = d => d.toISOString().split('T')[0];
   const due = new Date(today); due.setDate(due.getDate() + 30);
-  document.getElementById('issue-date').value = toStr(today);
-  document.getElementById('due-date').value = toStr(due);
+  const issueDate = document.getElementById('issue-date');
+  const dueDate = document.getElementById('due-date');
+  if (issueDate) issueDate.value = toStr(today);
+  if (dueDate) dueDate.value = toStr(due);
 
   // Initial rows
   addRow('', '', '');
   addRow('', '', '');
   addRow('', '', '');
+  setLanguage('th');
 </script>
 </body>
 </html>
