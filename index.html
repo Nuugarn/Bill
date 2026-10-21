@@ -8,7 +8,6 @@
 <style>
   :root {
     --primary: #1b4f3a;
-    --primary2: #2a7a58;
     --accent: #d4a017;
     --light: #f4f8f5;
     --border: #c2d6ca;
@@ -33,15 +32,15 @@
     background: var(--primary);
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
   }
   .topbar-title { color: #fff; font-weight: 700; font-size: 16px; white-space: nowrap; }
   .topbar-title span { color: var(--accent); }
   .topbar-actions { display: flex; align-items: center; gap: 8px; }
   .lang-switch {
     display: flex; padding: 3px; gap: 2px;
-    border: 1px solid rgba(255,255,255,.35); border-radius: 8px;
-    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 8px;
+    background: rgba(255,255,255,.15);
   }
   .lang-btn {
     min-width: 34px; padding: 5px 8px; border: none; border-radius: 5px;
@@ -50,6 +49,29 @@
     cursor: pointer;
   }
   .lang-btn.active { background: #fff; color: var(--primary); }
+  .header-menu { position: relative; }
+  .company-button {
+    border: none; background: rgba(255,255,255,.15); color: #fff;
+    padding: 8px 12px; border-radius: 8px;
+    font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .company-button:hover { background: rgba(255,255,255,.25); }
+  .company-widget {
+    display: none; position: absolute; top: 44px; right: 0; z-index: 200;
+    width: 320px; max-width: calc(100vw - 24px);
+    background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(27,79,58,.18); padding: 14px;
+  }
+  .company-widget.show { display: block; }
+  .company-widget h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+  .company-preset {
+    width: 100%; border: 1px solid var(--border); border-radius: 8px; background: var(--light);
+    padding: 10px; text-align: left; color: var(--text); cursor: pointer;
+    font-family: 'Sarabun', sans-serif; font-size: 12px; line-height: 1.55;
+  }
+  .company-preset:hover { border-color: var(--primary); background: #eef5f1; }
   .btn-pdf {
     background: var(--accent); color: #fff; border: none;
     padding: 8px 18px; border-radius: 8px;
@@ -61,68 +83,69 @@
 
   @media(max-width:480px) {
     .topbar { padding: 10px 12px; }
-    .topbar-title { font-size: 12px; }
-    .topbar-actions { gap: 6px; }
+    .topbar-title { display: none; }
+    .topbar-actions { gap: 6px; margin-left: auto; }
     .lang-btn { min-width: 28px; padding: 5px; }
+    .company-button { padding: 7px 9px; font-size: 12px; gap: 4px; }
     .btn-pdf { padding: 7px 9px; font-size: 12px; gap: 4px; }
     .doc-top { flex-direction: column; }
-    .doc-badge { width: 100%; }
+    .doc-badge { width: 100%; max-width: 100%; }
+    .company-widget {
+      position: fixed; top: 54px; left: 12px; right: 12px;
+      width: auto; max-width: none;
+    }
   }
 
-  .wrapper { max-width: 760px; margin: 0 auto; padding: 72px 12px 40px; }
+  .wrapper { max-width: 780px; margin: 0 auto; padding: 76px 12px 40px; }
 
   .card {
-    background: #fff; border-radius: 14px;
-    box-shadow: 0 4px 20px rgba(27,79,58,.10);
-    overflow: hidden; margin-bottom: 14px;
+    background: transparent; border-radius: 0;
+    box-shadow: none; overflow: visible; margin-bottom: 14px;
   }
   .card-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
-    padding: 13px 18px;
+    background: transparent; padding: 7px 0;
     display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border);
   }
   .card-header-icon {
-    width: 30px; height: 30px; border-radius: 8px;
-    background: rgba(255,255,255,.15);
-    display: flex; align-items: center; justify-content: center; color: var(--accent);
+    display: none;
   }
-  .card-header h2 { color: #fff; font-size: 14px; font-weight: 700; }
-  .card-body { padding: 16px 18px; }
+  .card-header h2 { color: var(--primary); font-size: 13px; font-weight: 800; }
+  .card-body { padding: 10px 0 0; }
 
   /* DOC HEADER */
   .doc-header {
-    background: #fff; border-radius: 14px;
-    box-shadow: 0 4px 20px rgba(27,79,58,.10);
-    overflow: hidden; margin-bottom: 14px;
+    background: transparent; border-radius: 0;
+    box-shadow: none; overflow: visible; margin-bottom: 12px;
   }
   .doc-top {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
-    padding: 20px 18px 16px;
+    background: transparent; padding: 0 0 10px;
     display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
   }
   .company-name-input {
-    font-size: 20px; font-weight: 800; color: #fff;
-    background: rgba(255,255,255,.12); border: 1.5px dashed rgba(255,255,255,.4);
-    border-radius: 8px; padding: 6px 10px; width: 100%;
+    font-size: 15px; font-weight: 700; color: var(--text);
+    background: transparent; border: none; border-bottom: 1px dashed var(--border);
+    border-radius: 0; padding: 6px 0; width: 100%;
     font-family: 'Sarabun', sans-serif;
   }
-  .company-name-input::placeholder { color: rgba(255,255,255,.45); }
+  .company-name-input::placeholder { color: #829e8f; }
   .company-sub-input {
-    font-size: 12px; color: rgba(255,255,255,.8);
-    background: rgba(255,255,255,.08); border: 1px dashed rgba(255,255,255,.3);
-    border-radius: 6px; padding: 4px 8px; width: 100%; margin-top: 6px;
-    font-family: 'Sarabun', sans-serif;
+    font-size: 12px; color: var(--text);
+    background: transparent; border: none; border-bottom: 1px dashed var(--border);
+    border-radius: 0; padding: 4px 0; width: 100%; margin-top: 4px;
+    font-family: 'Sarabun', sans-serif; line-height: 1.5;
+    resize: none; overflow: hidden; min-height: 44px;
   }
   .doc-badge {
-    background: var(--accent); border-radius: 10px;
-    padding: 8px 14px; text-align: center; min-width: 130px; flex-shrink: 0;
+    background: transparent; border-radius: 0;
+    padding: 0 4px 0 0; text-align: right; width: 250px; max-width: 45%; flex-shrink: 0;
   }
-  .doc-badge .badge-title { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: .5px; }
-  .doc-badge .badge-sub { font-size: 10px; color: rgba(255,255,255,.8); margin-top: 2px; }
+  .doc-badge .badge-title { font-size: 17px; font-weight: 800; color: var(--primary); letter-spacing: 1px; }
+  .doc-badge .badge-sub { font-size: 10px; color: var(--muted); margin-top: 18px; }
   .doc-badge .doc-no-input {
-    font-size: 13px; font-weight: 700; color: #fff; text-align: center;
-    background: rgba(255,255,255,.2); border: 1px dashed rgba(255,255,255,.5);
-    border-radius: 5px; padding: 3px 6px; width: 100%; margin-top: 4px;
+    font-size: 12px; font-weight: 600; color: var(--text); text-align: right;
+    background: transparent; border: none; border-bottom: 1px dashed var(--border);
+    border-radius: 0; padding: 3px 0; width: 68%; margin-top: 2px;
     font-family: 'Sarabun', sans-serif;
   }
   .doc-meta { padding: 12px 18px; background: var(--light); border-bottom: 1px solid var(--border); }
@@ -134,15 +157,15 @@
     text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;
   }
   .field input, .field textarea, .field select {
-    width: 100%; padding: 9px 12px;
-    border: 1.5px solid var(--border); border-radius: 8px;
+    width: 100%; padding: 6px 0;
+    border: none; border-bottom: 1px dashed var(--border); border-radius: 0;
     font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--text);
-    background: #fff; transition: border .2s, box-shadow .2s;
+    background: transparent; transition: border .2s, box-shadow .2s;
     -webkit-appearance: none;
   }
   .field input:focus, .field textarea:focus, .field select:focus {
     outline: none; border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(27,79,58,.1);
+    box-shadow: 0 2px 0 rgba(27,79,58,.08);
   }
   .field textarea { resize: vertical; min-height: 60px; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -152,14 +175,16 @@
   .tbl-head {
     display: grid;
     grid-template-columns: 40px 1fr 100px 120px 120px 36px;
-    gap: 5px; padding: 9px 8px;
-    background: var(--primary); border-radius: 8px 8px 0 0;
-    font-size: 11px; font-weight: 700; color: rgba(255,255,255,.9);
+    gap: 0; padding: 0;
+    background: var(--primary); border-radius: 0;
+    font-size: 11px; font-weight: 700; color: #fff;
     text-align: center;
   }
+  .tbl-head span { padding: 7px 8px; border-right: 1px solid #32664f; }
+  .tbl-head span:last-child { border-right: none; }
   .tbl-head span:nth-child(2) { text-align: left; }
 
-  .tbl-wrapper { border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .tbl-wrapper { border: 1px solid #8daa9a; border-radius: 0; overflow: hidden; background: #fff; }
   .tbl-body { min-height: 40px; }
 
   @media(max-width:540px) {
@@ -170,28 +195,34 @@
   .item-row {
     display: grid;
     grid-template-columns: 40px 1fr 100px 120px 120px 36px;
-    gap: 5px; padding: 6px 8px;
+    gap: 0; padding: 0;
     background: #fff; border-bottom: 1px solid var(--border);
-    align-items: center;
+    align-items: stretch;
   }
   .item-row:last-child { border-bottom: none; }
   .item-row:nth-child(even) { background: #f6faf7; }
+  .item-row > * { border-right: 1px solid var(--border); }
+  .item-row > *:last-child { border-right: none; }
 
   .row-num {
-    text-align: center; font-size: 12px; color: var(--muted); font-weight: 700;
-    background: var(--light); border-radius: 6px; padding: 5px 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; font-size: 12px; color: #2e5f48; font-weight: 700;
+    background: #eef5f1; border-radius: 0; padding: 6px 2px;
   }
   .ii {
-    border: 1.5px solid var(--border); border-radius: 6px;
+    border: none; border-radius: 0;
     padding: 6px 8px; font-family: 'Sarabun', sans-serif;
-    font-size: 13px; color: var(--text); width: 100%; background: #fff;
+    font-size: 13px; color: var(--text); width: 100%; min-width: 0; background: transparent;
     transition: border .2s;
+    font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
   }
-  .ii:focus { outline: none; border-color: var(--primary); }
+  .ii:focus { outline: 2px solid #2a7a58; outline-offset: -2px; }
   .ii.right { text-align: right; }
   .row-total {
+    display: flex; align-items: center; justify-content: flex-end;
     text-align: right; font-size: 13px; font-weight: 700;
-    color: var(--primary); padding-right: 4px;
+    color: var(--primary); padding: 6px 8px;
+    font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
   }
   .btn-del {
     background: none; border: none; cursor: pointer;
@@ -202,29 +233,12 @@
 
   .btn-add-row {
     display: flex; align-items: center; gap: 8px;
-    background: none; border: 1.5px dashed var(--border);
-    border-radius: 8px; padding: 10px 14px;
-    font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--muted);
-    cursor: pointer; width: 100%; margin-top: 10px; transition: all .2s;
+    background: var(--light); border: 1px solid #8daa9a;
+    border-radius: 0; padding: 6px 14px;
+    font-family: 'Sarabun', sans-serif; font-size: 13px; color: #365b49; font-weight: 600;
+    cursor: pointer; width: fit-content; margin-top: 8px; transition: all .2s;
   }
-  .btn-add-row:hover { border-color: var(--primary); color: var(--primary); }
-
-  /* SUMMARY */
-  .summary-box {
-    background: var(--light); border-radius: 10px;
-    border: 1.5px solid var(--border); padding: 14px 18px; margin-top: 14px;
-  }
-  .sum-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 0; font-size: 14px; border-bottom: 1px dashed var(--border);
-  }
-  .sum-row:last-child { border-bottom: none; }
-  .sum-row.grand {
-    border-top: 2.5px solid var(--primary); margin-top: 8px; padding-top: 10px;
-    font-size: 18px; font-weight: 800; color: var(--primary); border-bottom: none;
-  }
-  .sum-label { color: var(--muted); font-size: 13px; }
-  .sum-val { font-weight: 700; }
+  .btn-add-row:hover { background: #e6eeea; color: var(--primary); }
 
   /* SIGNATURE */
   .sig-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -258,58 +272,63 @@
   /* ── FOOTER SECTION (หมายเหตุซ้าย + ลายเซ็นขวา) ── */
   .footer-top-row {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 0; border-radius: 14px 14px 0 0; overflow: hidden;
-    border: 1.5px solid var(--border); border-bottom: none;
-    box-shadow: 0 4px 20px rgba(27,79,58,.10);
+    gap: 16px; border-radius: 0; overflow: visible;
+    border: none; box-shadow: none;
+    margin-top: 2px;
   }
   .footer-top-left {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
-    padding: 11px 16px; display: flex; align-items: center; gap: 8px;
-    border-right: 1px solid rgba(255,255,255,.15);
+    background: transparent;
+    padding: 7px 0; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
   }
   .footer-top-left-icon {
-    width: 26px; height: 26px; border-radius: 7px;
-    background: rgba(255,255,255,.15);
-    display: flex; align-items: center; justify-content: center; color: var(--accent);
-    flex-shrink: 0;
+    display: none;
   }
-  .footer-top-left h3 { color: #fff; font-size: 13px; font-weight: 700; }
+  .footer-top-left h3 { color: var(--danger); font-size: 13px; font-weight: 800; }
   .footer-top-right {
-    background: #fff; padding: 11px 18px;
+    background: transparent; padding: 7px 0;
     display: flex; align-items: center; justify-content: space-between;
-    border-left: 1px solid var(--border);
+    border-top: 2px solid var(--primary); border-bottom: 1px solid var(--border);
   }
-  .footer-top-right-label { font-size: 14px; font-weight: 700; color: var(--primary); }
-  .footer-top-right-amount { font-size: 20px; font-weight: 800; color: var(--accent); }
+  .footer-top-right-label { font-size: 16px; font-weight: 800; color: var(--primary); }
+  .footer-top-right-amount {
+    font-size: 18px; font-weight: 800; color: var(--primary);
+    font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
+  }
 
   .footer-bottom-row {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 0; border-radius: 0 0 14px 14px; overflow: hidden;
-    border: 1.5px solid var(--border); border-top: none;
+    display: grid; grid-template-columns: 1fr;
+    gap: 0; border-radius: 0; overflow: visible;
+    border: none;
     margin-bottom: 14px;
-    box-shadow: 0 4px 20px rgba(27,79,58,.10);
+    box-shadow: none;
   }
   @media(max-width:540px) {
     .footer-top-row, .footer-bottom-row { grid-template-columns: 1fr; }
+    .footer-top-row, .footer-bottom-row { gap: 0; }
+    .footer-bottom-left { grid-template-columns: 1fr !important; gap: 8px !important; }
   }
   .footer-bottom-left {
-    padding: 14px 16px; border-right: 1px solid var(--border); background: #fff;
+    display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 12px;
+    padding: 10px 0 14px; border: none; background: transparent;
   }
-  .footer-bottom-right { padding: 14px 16px; background: #fff; }
+  .footer-bottom-left .field { margin-bottom: 0 !important; }
+  .footer-bottom-right { padding: 10px 0; background: transparent; }
 
   /* sig inline */
   .sig-inline {
-    border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px;
+    border: none; border-radius: 0; padding: 0;
   }
   .sig-inline-title {
-    font-size: 10px; font-weight: 700; color: var(--muted);
-    text-transform: uppercase; letter-spacing: .5px;
-    text-align: center; margin-bottom: 8px;
+    font-size: 10px; font-weight: 800; color: var(--primary);
+    text-transform: uppercase; letter-spacing: 0;
+    text-align: center; margin-bottom: 10px; padding-bottom: 7px;
+    border-bottom: 1px solid var(--border);
   }
-  .sig-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .sig-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .sig-col { text-align: center; }
-  .sig-col-label { font-size: 10px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
-  .sig-space { height: 30px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .sig-col-label { font-size: 10px; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
+  .sig-space { height: 62px; border-bottom: 1.5px solid var(--text); margin-bottom: 6px; opacity: .25; }
   .sig-name-n {
     border: none; border-bottom: 1.5px dashed var(--border);
     font-family: 'Sarabun', sans-serif; font-size: 12px; text-align: center;
@@ -332,9 +351,9 @@
 
   @media print {
     @page { size: A4; margin: 10mm 10mm 10mm 10mm; }
-    body { background: #fff; font-size: 12px; }
+    body { background: #fff !important; font-size: 12px; }
     .topbar, .btn-add-row, .btn-del, .no-print { display: none !important; }
-    .wrapper { padding: 0; max-width: 100%; }
+    .wrapper { padding: 0 !important; max-width: 100%; }
     .card, .doc-header { box-shadow: none; margin-bottom: 8px; page-break-inside: avoid; }
     .ii, .company-name-input, .company-sub-input, .doc-no-input,
     .field input, .field textarea, .field select,
@@ -345,9 +364,12 @@
     .field input, .field textarea, .field select { border-bottom: 1px solid #ccc !important; }
     .sig-date-pk { display: none !important; }
     .sig-date-disp { display: block !important; }
-    .tbl-head, .doc-top, .card-header, .footer-top-left {
+    .tbl-head, .row-num, .item-row:nth-child(even) {
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
+    .tbl-head { background: var(--primary) !important; }
+    .row-num { background: #eef5f1 !important; }
+    .item-row:nth-child(even) { background: #f6faf7 !important; }
     .footer-top-row, .footer-bottom-row { page-break-inside: avoid; break-inside: avoid; box-shadow: none; }
   }
 </style>
@@ -360,6 +382,20 @@
     <div class="lang-switch" role="group" aria-label="เลือกภาษา" data-i18n-aria-label="languageSelector">
       <button class="lang-btn active" type="button" data-lang="th" onclick="setLanguage('th')">TH</button>
       <button class="lang-btn" type="button" data-lang="en" onclick="setLanguage('en')">EN</button>
+    </div>
+    <div class="header-menu no-print">
+      <button class="company-button" type="button" onclick="toggleCompanyWidget(event)" title="เลือกข้อมูลผู้วางบิล" data-i18n-title="companySettingsTitle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+        <span data-i18n="companyButton">ข้อมูล</span>
+      </button>
+      <div class="company-widget" id="companyWidget">
+        <h4 data-i18n="companyMenuTitle">ข้อมูลผู้วางบิล</h4>
+        <button type="button" class="company-preset" onclick="applyCompanyPreset()" data-i18n-html="companyPreset">
+          ช่างเกล้า Built-in<br>
+          101/158 ซ.55 ถนนเลียบวารี แขวงโคกแฝก เขตหนองจอก กรุงเทพฯ 10530<br>
+          โทร.091-876-8157
+        </button>
+      </div>
     </div>
     <button class="btn-pdf" onclick="window.print()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
@@ -374,8 +410,8 @@
   <div class="doc-header">
     <div class="doc-top">
       <div style="flex:1">
-        <input class="company-name-input" type="text" placeholder="ชื่อบริษัท / ผู้รับเหมา" data-i18n-placeholder="companyNamePlaceholder">
-        <input class="company-sub-input" type="text" placeholder="ที่อยู่ / เบอร์โทร / อีเมล" data-i18n-placeholder="companyContactPlaceholder">
+        <input class="company-name-input" id="companyName" type="text" placeholder="ชื่อบริษัท / ผู้รับเหมา" data-i18n-placeholder="companyNamePlaceholder">
+        <textarea class="company-sub-input" id="companyContact" rows="2" placeholder="ที่อยู่ / เบอร์โทร / อีเมล" data-i18n-placeholder="companyContactPlaceholder" oninput="resizeCompanyContact()"></textarea>
       </div>
       <div class="doc-badge">
         <div class="badge-title" data-i18n="documentTitle">ใบวางบิล</div>
@@ -432,16 +468,6 @@
         <span data-i18n="addInstallment">เพิ่มงวด</span>
       </button>
 
-      <div class="summary-box">
-        <div class="sum-row">
-          <span class="sum-label" data-i18n="subtotal">รวมจำนวนเงินทั้งหมด</span>
-          <span class="sum-val" id="total-amt">0.00 ฿</span>
-        </div>
-        <div class="sum-row grand">
-          <span data-i18n="grandTotal">ยอดรวมทั้งสิ้น</span>
-          <span id="grand-total">0.00 ฿</span>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -519,6 +545,10 @@
       appTitle: '🧾 ใบ<span>วางบิล</span>',
       languageSelector: 'เลือกภาษา',
       savePdf: 'บันทึก PDF',
+      companyButton: 'ข้อมูล',
+      companySettingsTitle: 'เลือกข้อมูลผู้วางบิล',
+      companyMenuTitle: 'ข้อมูลผู้วางบิล',
+      companyPreset: 'ช่างเกล้า Built-in<br>101/158 ซ.55 ถนนเลียบวารี แขวงโคกแฝก เขตหนองจอก กรุงเทพฯ 10530<br>โทร.091-876-8157',
       companyNamePlaceholder: 'ชื่อบริษัท / ผู้รับเหมา',
       companyContactPlaceholder: 'ที่อยู่ / เบอร์โทร / อีเมล',
       documentTitle: 'ใบวางบิล',
@@ -536,7 +566,6 @@
       amount: 'จำนวนเงิน',
       totalThb: 'ราคารวม (฿)',
       addInstallment: 'เพิ่มงวด',
-      subtotal: 'รวมจำนวนเงินทั้งหมด',
       grandTotal: 'ยอดรวมทั้งสิ้น',
       notes: 'หมายเหตุ',
       paymentMethod: 'ชำระโดยวิธี / บัญชีธนาคาร',
@@ -559,6 +588,10 @@
       appTitle: '🧾 Billing <span>Statement</span>',
       languageSelector: 'Select language',
       savePdf: 'Save PDF',
+      companyButton: 'Company',
+      companySettingsTitle: 'Select biller information',
+      companyMenuTitle: 'Biller Information',
+      companyPreset: 'Chang Klao Built-in<br>101/158 Soi 55, Liap Wari Road, Khok Faet, Nong Chok, Bangkok 10530<br>Tel. 091-876-8157',
       companyNamePlaceholder: 'Company / Contractor name',
       companyContactPlaceholder: 'Address / Phone / Email',
       documentTitle: 'BILLING STATEMENT',
@@ -576,7 +609,6 @@
       amount: 'Amount',
       totalThb: 'Total (THB)',
       addInstallment: 'Add Installment',
-      subtotal: 'Subtotal',
       grandTotal: 'Grand Total',
       notes: 'Notes',
       paymentMethod: 'Payment Method / Bank Account',
@@ -618,6 +650,34 @@
     return currentLang === 'th' ? `${value} ฿` : `THB ${value}`;
   }
 
+  function toggleCompanyWidget(event) {
+    event.stopPropagation();
+    document.getElementById('companyWidget')?.classList.toggle('show');
+  }
+
+  function resizeCompanyContact() {
+    const contact = document.getElementById('companyContact');
+    if (!contact) return;
+    contact.style.height = 'auto';
+    contact.style.height = `${contact.scrollHeight}px`;
+  }
+
+  function applyCompanyPreset() {
+    const name = document.getElementById('companyName');
+    const contact = document.getElementById('companyContact');
+    if (!name || !contact) return;
+
+    if (currentLang === 'th') {
+      name.value = 'ช่างเกล้า Built-in';
+      contact.value = '101/158 ซ.55 ถนนเลียบวารี แขวงโคกแฝก เขตหนองจอก กรุงเทพฯ 10530\nโทร.091-876-8157';
+    } else {
+      name.value = 'Chang Klao Built-in';
+      contact.value = '101/158 Soi 55, Liap Wari Road, Khok Faet, Nong Chok, Bangkok 10530\nTel. 091-876-8157';
+    }
+    resizeCompanyContact();
+    document.getElementById('companyWidget')?.classList.remove('show');
+  }
+
   function setLanguage(lang) {
     if (!translations[lang]) return;
     currentLang = lang;
@@ -637,6 +697,9 @@
     document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
       el.setAttribute('aria-label', t[el.dataset.i18nAriaLabel]);
     });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      el.title = t[el.dataset.i18nTitle];
+    });
     document.querySelectorAll('.lang-btn').forEach(button => {
       const active = button.dataset.lang === lang;
       button.classList.toggle('active', active);
@@ -652,6 +715,14 @@
     updateSigDate('sigApproverDate', 'sigApproverDisp');
     calcAll();
   }
+
+  document.addEventListener('click', event => {
+    const widget = document.getElementById('companyWidget');
+    if (widget?.classList.contains('show') && !event.target.closest('.header-menu')) {
+      widget.classList.remove('show');
+    }
+  });
+  window.addEventListener('resize', resizeCompanyContact);
 
   function addRow(desc='', pct='', amt='') {
     rowId++;
@@ -693,8 +764,6 @@
     document.querySelectorAll('.item-row').forEach(row => {
       totalAmt += parseFloat(row.querySelector('.amt-input').value) || 0;
     });
-    document.getElementById('total-amt').textContent = fmt(totalAmt);
-    document.getElementById('grand-total').textContent = fmt(totalAmt);
     document.getElementById('grand-total-footer').textContent = fmt(totalAmt);
   }
 
